@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Checkout";
+}
+
+<h2>Dettaglio Prenotazione</h2>
+
+@if (!string.IsNullOrEmpty(ViewBag.dettaglioPrenotazione))
+{
+    <pre>
+        @Html.Raw(ViewBag.dettaglioPrenotazione)
+    </pre>
+}
+else
+{
+    <p>Errore nel recupero del dettaglio della prenotazione.</p>
+}
+
+@if (ViewBag.checkoutEffettuato)
+{
+    <p>Checkout effettuato con successo.</p>
+    <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
+}
+else
+{
+    <p>Errore nel checkout della prenotazione.</p>
+    <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
+}

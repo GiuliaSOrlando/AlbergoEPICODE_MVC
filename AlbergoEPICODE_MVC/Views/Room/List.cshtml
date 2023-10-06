@@ -1,0 +1,45 @@
+﻿@model IEnumerable<AlbergoEPICODE_MVC.Models.Camera>
+
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>Lista camere</h2>
+
+<p>
+    @Html.ActionLink("Aggiungi nuova camera", "Create", null, new { @class = "text-decoration-none fs-4" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IdCamera)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsDoppia)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCamera)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDoppia)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.IdCamera }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.IdCamera })
+            </td>
+        </tr>
+    }
+
+</table>
