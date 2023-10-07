@@ -4,89 +4,88 @@
     ViewBag.Title = "List";
 }
 
-<h2>Lista prenotazioni</h2>
+<div class="p-5 m-5 shadow-lg">
+    <h2 class="fw-light text-center text-white-50 bg-dark mb-0 pt-2">LISTA PRENOTAZIONI ATTIVE</h2>
+    <div class="bg-dark table-responsive-xl p-5 d-flex justify-content-center">
+        <table class="table-responsive-xl bg-dark text-white-50">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdPrenotazione)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumeroCliente)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumeroCamera)
+                </th>
+                <th class="d-none d-xxl-table-cell">
+                    @Html.DisplayNameFor(model => model.DataPrenotazione)
+                </th>
+                <th class="d-none d-xxl-table-cell">
+                    @Html.DisplayNameFor(model => model.NumeroProgressivo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataCheckIn)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataCheckOut)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Caparra)
+                </th>
+                <th class="d-none d-xxl-table-cell">
+                    @Html.DisplayNameFor(model => model.TipoSoggiorno)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tariffa)
+                </th>
+                <th></th>
+            </tr>
 
-<p>
-    @Html.ActionLink("Aggiungi nuova prenotazione", "Create", null, new {@class = "text-decoration-none fs-4"})
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.IdPrenotazione)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumeroCliente)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumeroCamera)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DataPrenotazione)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Anno)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumeroProgressivo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DataCheckIn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DataCheckOut)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Caparra)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TipoSoggiorno)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tariffa)
-        </th>
-        <th></th>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdPrenotazione)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroCliente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroCamera)
+                    </td>
+                    <td class="d-none d-xxl-table-cell">
+                        @Html.DisplayFor(modelItem => item.DataPrenotazione)
+                    </td>
+                    @Html.HiddenFor(modelItem => item.Anno)
+                    <td class="d-none d-xxl-table-cell">
+                        @Html.DisplayFor(modelItem => item.NumeroProgressivo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataCheckIn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataCheckOut)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Caparra)
+                    </td>
+                    <td class="d-none d-xxl-table-cell">
+                        @Html.DisplayFor(modelItem => item.TipoSoggiorno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tariffa)
+                    </td>
+                    <td>
+                        <div class="btn-group p-2" role="group">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.IdPrenotazione }, new { @class = "ms-1 btn btn-outline-light" })
+                            @Html.ActionLink("Checkout", "Checkout", new { id = item.IdPrenotazione }, new { @class = "btn btn-outline-light" })
+                            @Html.ActionLink("Delete", "Delete", new { id = item.IdPrenotazione }, new { @class = "me-1 btn btn-outline-light" })
+                        </div>
+                    </td>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdPrenotazione)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumeroCliente)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumeroCamera)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataPrenotazione)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Anno)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumeroProgressivo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataCheckIn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataCheckOut)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Caparra)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TipoSoggiorno)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tariffa)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.IdPrenotazione }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.IdPrenotazione })
-        </td>
-    </tr>
-}
-
-</table>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

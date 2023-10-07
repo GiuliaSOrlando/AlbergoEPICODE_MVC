@@ -1,44 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+
 
 namespace AlbergoEPICODE_MVC.Models
 {
     public class Prenotazione
     {
+        [Display(Name = "Prenotazione")]
         public int IdPrenotazione { get; set; }
         [Required]
+        [Display(Name = "Cliente n.")]
         public int NumeroCliente { get; set; }
         [Required]
+        [Display(Name = "Camera n.")]
         public int NumeroCamera { get; set; }
+        [Display(Name = "Prenotato il")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataPrenotazione { get; set; } = DateTime.Now;
         public int Anno { get; set; } = DateTime.Now.Year;
         public string NumeroProgressivo { get; set; }
         [Required]
+        [Display(Name = "CheckIn")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataCheckIn { get; set; }
         [Required]
+        [Display(Name = "CheckOut")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataCheckOut { get; set; }
         public decimal Caparra { get; set; }
+        [Display(Name = "Tipologia")]
         public string TipoSoggiorno { get; set; }
         [Required]
         public decimal Tariffa { get; set; }
         [Required]
+        [Display(Name = "Camera")]
         public string TipoCamera { get; set; }
         [Required]
+        [Display(Name = "Singola")]
         public bool IsSingola { get; set; }
 
-        List<Prenotazione> listaPrenotazioni = new List<Prenotazione>();
+        public static List<Prenotazione> listaPrenotazioni = new List<Prenotazione>();
 
-        List<Prenotazione> listaPrenotazioniDisattive = new List<Prenotazione>();
+        public static List<Prenotazione> listaPrenotazioniDisattive = new List<Prenotazione>();
 
         public static List<string> ListaTipoSoggiorno = new List<string>
         {"Mezza pensione","Pensione completa","Pernottamento con prima colazione"};
 
         public string SelTipoSoggiorno { get; set; }
+
 
         // Metodi
 
@@ -163,6 +179,19 @@ namespace AlbergoEPICODE_MVC.Models
             return tipoCamera;
         }
 
+        public List<SelectListItem> VisualizzaListaClienti()
+        {
+            Cliente cliente = new Cliente();
+            List<Cliente> listaClienti = cliente.ListaClienti();
+
+            List<SelectListItem> SelListaClienti = listaClienti.Select(c => new SelectListItem
+            {
+                Value = c.IdCliente.ToString(),
+                Text = $"{c.Cognome} {c.Nome}" 
+            }).ToList();
+
+            return SelListaClienti;
+        }
 
         public List<Prenotazione> ListaPrenotazioni()
         {
@@ -281,7 +310,7 @@ namespace AlbergoEPICODE_MVC.Models
                         DataCheckOut = (DateTime)reader["DataCheckOut"],
                         Caparra = (decimal)reader["Caparra"],
                         Tariffa = (decimal)reader["Tariffa"],
-                        TipoCamera = reader["Descrizione"].ToString(),
+                        TipoSoggiorno = reader["TipoSoggiorno"].ToString(),
                         IsSingola = !(bool)reader["IsDoppia"]
                     };
                 }
@@ -390,10 +419,10 @@ namespace AlbergoEPICODE_MVC.Models
                 {
                     Servizio servizio = new Servizio
                     {
-                        IdServizio = (int)reader["IdServizioAggiuntivo"],
-                        Descrizione = reader["Nome"].ToString(),
+                        IdServizio = (int)reader["IdServizio"],
+                        Descrizione = reader["Descrizione"].ToString(),
                         Quantita = (int)reader["Quantita"],
-                        Prezzo = (decimal)reader["Costo"]
+                        Prezzo = (decimal)reader["Prezzo"]
                     };
 
                     listaExtra.Add(servizio);
@@ -410,31 +439,46 @@ namespace AlbergoEPICODE_MVC.Models
             return listaExtra;
         }
 
-        public decimal CalcolaImportoDaSaldare()
+        public decimal CalcolaImportoDaSaldare(int id)
         {
-            decimal importoDaSaldare = Tariffa - Caparra;
-
-            importoDaSaldare += ListaExtraPrenotazione(IdPrenotazione).Sum(servizio => servizio.Prezzo * servizio.Quantita);
-
-            return importoDaSaldare;
-        }
-
-        public string DettaglioCompleto()
-        {
-            string dettaglio = $"Numero di stanza: {NumeroCamera}\n";
-            dettaglio += $"Periodo: dal {DataCheckIn.ToShortDateString()} al {DataCheckOut.ToShortDateString()}\n";
-            dettaglio += $"Tariffa applicata: {Tariffa:C}\n";
-            dettaglio += "Servizi aggiuntivi:\n";
-
-            foreach (var servizio in ListaExtraPrenotazione(IdPrenotazione))
+            Prenotazione prenotazione = listaPrenotazioni.FirstOrDefault(p => p.IdPrenotazione == id);
+            if (prenotazione != null)
             {
-                dettaglio += $"{servizio.Descrizione}: {servizio.Prezzo:C}\n";
+                decimal importoDaSaldare = prenotazione.Tariffa - prenotazione.Caparra;
+
+                importoDaSaldare += prenotazione.ListaExtraPrenotazione(id).Sum(servizio => servizio.Prezzo * servizio.Quantita);
+
+                return importoDaSaldare;
             }
-
-            dettaglio += $"Importo da saldare: {CalcolaImportoDaSaldare():C}\n";
-
-            return dettaglio;
+            return 0;
         }
+
+        //public string DettaglioCompleto(int id)
+        //{
+        //    Prenotazione prenotazione = listaPrenotazioni.FirstOrDefault(p => p.IdPrenotazione == id);
+
+        //    if (prenotazione != null)
+        //    {
+        //        string dettaglio = $"Numero di stanza: {prenotazione.NumeroCamera}\n";
+        //        dettaglio += $"Periodo: dal {prenotazione.DataCheckIn.ToShortDateString()} al {prenotazione.DataCheckOut.ToShortDateString()}\n";
+        //        dettaglio += $"Tariffa applicata: {prenotazione.Tariffa:C}\n";
+        //        dettaglio += "Servizi aggiuntivi:\n";
+
+        //        foreach (var servizio in prenotazione.ListaExtraPrenotazione(id))
+        //        {
+        //            dettaglio += $"{servizio.Descrizione}: {servizio.Prezzo:C}\n";
+        //        }
+
+        //        dettaglio += $"Importo da saldare: {CalcolaImportoDaSaldare(id):C}\n";
+
+        //        return dettaglio;
+        //    }
+        //    else
+        //    {
+        //        return "Prenotazione non trovata";
+        //    }
+        //}
+
 
         public bool EffettuaCheckout(int idPrenotazione)
         { 

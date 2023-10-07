@@ -1,5 +1,57 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Index";
 }
 
-"Home"
+<style>
+    /* Style for the logo */
+    .carousel-logo {
+        position: absolute;
+        width: 300px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+</style>
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="1000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+        <li data-target="#myCarousel" data-slide-to="4"></li>
+        <li data-target="#myCarousel" data-slide-to="5"></li>
+    </ol>
+
+    <div class="carousel-inner m-0">
+        <div class="carousel-item active">
+            <img src="~/Content/img/slide1.jpg" alt="Image 1" style="height: 90vh; object-fit:cover; width: 100%;">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/img/slide2.jpg" alt="Image 2" style="height: 90vh; object-fit: cover; width: 100%; ">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/img/slide3.jpg" alt="Image 3" style="height: 90vh; object-fit: cover; width: 100%; ">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/img/slide4.jpg" alt="Image 4" style="height: 90vh; object-fit: cover; width: 100%; ">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/img/slide5.jpg" alt="Image 5" style="height: 90vh; object-fit: cover; width: 100%; ">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/img/slide6.jpg" alt="Image 6" style="height: 90vh; object-fit: cover; width: 100%; ">
+        </div>
+    </div>
+    <img src="~/Content/img/epiclogohotel.png" alt="Your Logo" class="carousel-logo">
+
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#myCarousel').carousel();
+        });
+    </script>
+}

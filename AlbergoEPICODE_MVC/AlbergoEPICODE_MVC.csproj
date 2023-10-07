@@ -152,6 +152,13 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\img\epiclogohotel.png" />
+    <Content Include="Content\img\slide1.jpg" />
+    <Content Include="Content\img\slide2.jpg" />
+    <Content Include="Content\img\slide3.jpg" />
+    <Content Include="Content\img\slide4.jpg" />
+    <Content Include="Content\img\slide5.jpg" />
+    <Content Include="Content\img\slide6.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

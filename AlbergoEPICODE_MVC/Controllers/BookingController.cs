@@ -9,20 +9,37 @@ namespace AlbergoEPICODE_MVC.Controllers
 {
     public class BookingController : Controller
     {
-        public ActionResult List()
+        private void PopolaDropdownClienti()
         {
             Prenotazione prenotazione = new Prenotazione();
-            List<Prenotazione> listaPrenotazioni = prenotazione.ListaPrenotazioni();
+            List<SelectListItem> listaClienti = prenotazione.VisualizzaListaClienti();
+            ViewBag.listaClienti = listaClienti;
+        }
+        public ActionResult List()
+        {
+            List<Prenotazione> listaPrenotazioni = Session["ListaPrenotazioni"] as List<Prenotazione>;
+
+            if (listaPrenotazioni == null)
+            {
+                Prenotazione prenotazione = new Prenotazione();
+                listaPrenotazioni = prenotazione.ListaPrenotazioni();
+
+                Session["ListaPrenotazioni"] = listaPrenotazioni;
+            }
+
             return View(listaPrenotazioni);
         }
+
         public ActionResult Create()
         {
+            PopolaDropdownClienti();
             return View();
         }
 
         [HttpPost]
         public ActionResult Create(Prenotazione prenotazione)
         {
+            PopolaDropdownClienti();
             Camera cameraCorrispondente = new Camera().ListaCamere().FirstOrDefault(camera => camera.Descrizione == prenotazione.TipoCamera && camera.IsDoppia == !prenotazione.IsSingola);
             if (cameraCorrispondente == null)
             {
@@ -53,6 +70,7 @@ namespace AlbergoEPICODE_MVC.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
+            PopolaDropdownClienti();
             Prenotazione prenotazione = new Prenotazione();
             Prenotazione prenotazioneDaModificare = prenotazione.RecuperaPrenotazione(id);
 
@@ -69,6 +87,7 @@ namespace AlbergoEPICODE_MVC.Controllers
         [HttpPost]
         public ActionResult Edit(Prenotazione prenotazione)
         {
+            PopolaDropdownClienti();
             if (ModelState.IsValid)
             {
                 if (prenotazione.VerificaDisponibilitaCamera(prenotazione.NumeroCamera, prenotazione.DataCheckIn, prenotazione.DataCheckOut))
@@ -106,34 +125,24 @@ namespace AlbergoEPICODE_MVC.Controllers
         public ActionResult Checkout(int id)
         {
             Prenotazione prenotazione = new Prenotazione();
-            bool checkoutEffettuato = prenotazione.EffettuaCheckout(id);
+            prenotazione = prenotazione.RecuperaPrenotazione(id);
             List<Servizio> serviziAggiuntivi = prenotazione.ListaExtraPrenotazione(id);
-            decimal importoDaSaldare = prenotazione.CalcolaImportoDaSaldare();
-            string dettaglioPrenotazione = prenotazione.DettaglioCompleto();
+            decimal importoDaSaldare = prenotazione.CalcolaImportoDaSaldare(id);
+            bool checkoutEffettuato = prenotazione.EffettuaCheckout(id);
 
             ViewBag.Prenotazione = prenotazione;
             ViewBag.CheckoutEffettuato = checkoutEffettuato;
             ViewBag.ServiziAggiuntivi = serviziAggiuntivi;
             ViewBag.ImportoDaSaldare = importoDaSaldare;
-            ViewBag.DettaglioPrenotazione = dettaglioPrenotazione;
 
             if (checkoutEffettuato)
             {
 
-                bool rimozioneEffettuata = prenotazione.EffettuaCheckout(id);
-
-                if (rimozioneEffettuata)
-                {
-                    return RedirectToAction("Checkout");
-                }
-                else
-                {
-                    return RedirectToAction("List");
-                }
+                return View("Checkout");
             }
             else
             {
-                return RedirectToAction("List");
+                return View("List");
             }
         }
 

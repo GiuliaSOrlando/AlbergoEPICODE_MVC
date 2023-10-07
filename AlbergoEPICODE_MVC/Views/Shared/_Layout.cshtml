@@ -1,42 +1,83 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Applicazione ASP.NET</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark p-4 mx-5">
+<body style="background-color: darkslategrey">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark p-4">
         <div class="container">
-            @Html.ActionLink("Nome dell'applicazione", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <div class="d-flex align-items-center">
+                @Html.ActionLink(" ", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <img src="~/Content/img/epiclogohotel.png" alt="Immagine logo" style="width: 110px" />
+            </div>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Lista clienti", "List", "Customer", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Lista camere", "List", "Room", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Lista prenotazioni", "List", "Booking", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Lista extra", "List", "Extra", new { area = "" }, new { @class = "nav-link" })</li>
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-center">
+                <ul class="navbar-nav justify-content-around w-75">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="prenotazioneDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            GESTIONE PRENOTAZIONI
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="prenotazioneDropdown">
+                            <a class="dropdown-item" href="@Url.Action("Create", "Booking")">Aggiungi prenotazione</a>
+                            <a class="dropdown-item" href="@Url.Action("List", "Booking")">Lista prenotazioni</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="clientiDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            GESTIONE CLIENTI
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="clientiDropdown">
+                            <a class="dropdown-item" href="@Url.Action("Edit", "Customer")">Aggiungi cliente</a>
+                            <a class="dropdown-item" href="@Url.Action("List", "Customer")">Lista clienti</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="cameraDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            GESTIONE CAMERE
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="cameraDropdown">
+                            <a class="dropdown-item" href="@Url.Action("Edit", "Room")">Aggiungi camera</a>
+                            <a class="dropdown-item" href="@Url.Action("List", "Room")">Lista camere</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="extraDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            GESTIONE SERVIZI EXTRA
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="extraDropdown">
+                            <a class="dropdown-item" href="@Url.Action("Edit", "Extra")">Aggiungi extra</a>
+                            <a class="dropdown-item" href="@Url.Action("List", "Extra")">Lista extra</a>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Applicazione ASP.NET</p>
-        </footer>
+
+    <div class="container-body-content">
+        <div class="row">
+            <div>@RenderBody()</div>
+            <footer class="footer fixed-bottom bg-dark text-white-50 text-center p-3">
+                <div class="container">
+                    <p>&copy; @DateTime.Now.Year - Giulia Orlando || EPICODE </p>
+                </div>
+            </footer>
+        </div>
     </div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

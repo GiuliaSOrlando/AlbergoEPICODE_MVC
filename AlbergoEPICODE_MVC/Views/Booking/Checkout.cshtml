@@ -1,28 +1,38 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Checkout";
 }
 
-<h2>Dettaglio Prenotazione</h2>
+<div class="p-5 m-5 shadow-lg">
+    @if (ViewBag.checkoutEffettuato)
+    {
+        <div class="bg-dark text-white-50 w-50 p-3 mx-auto text-center">Checkout effettuato con successo.</div>
+        <div class="row justify-content-center p-5 shadow-lg">
+            <div class="col-md-6 bg-dark text-light p-5 shadow-lg">
+                <h2 class="fw-light">DETTAGLIO PRENOTAZIONE</h2>
 
-@if (!string.IsNullOrEmpty(ViewBag.dettaglioPrenotazione))
-{
-    <pre>
-        @Html.Raw(ViewBag.dettaglioPrenotazione)
-    </pre>
-}
-else
-{
-    <p>Errore nel recupero del dettaglio della prenotazione.</p>
-}
+                <p>Numero di stanza: @ViewBag.Prenotazione.NumeroCamera @ViewBag.Prenotazione.TipoSoggiorno</p>
+                <p>Periodo: dal @ViewBag.Prenotazione.DataCheckIn.ToShortDateString() al @ViewBag.Prenotazione.DataCheckOut.ToShortDateString()</p>
+                <p>Tariffa applicata: @ViewBag.Prenotazione.Tariffa</p>
 
-@if (ViewBag.checkoutEffettuato)
-{
-    <p>Checkout effettuato con successo.</p>
-    <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
-}
-else
-{
-    <p>Errore nel checkout della prenotazione.</p>
-    <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
-}
+                <p>Servizi aggiuntivi</p>
+                <ul>
+                    @foreach (var servizio in ViewBag.ServiziAggiuntivi)
+                    {
+                        <li>@servizio.Descrizione: @servizio.Prezzo</li>
+                    }
+                </ul>
+
+                <p>Importo da saldare: @ViewBag.ImportoDaSaldare</p>
+
+                <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
+                }
+                else
+                {
+                <p>Errore nel checkout della prenotazione.</p>
+                <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
+            </div>
+        </div>
+    }
+
+
+</div>

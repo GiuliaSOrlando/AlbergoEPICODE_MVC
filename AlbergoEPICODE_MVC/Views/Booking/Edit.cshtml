@@ -2,101 +2,78 @@
 
 @{
     ViewBag.Title = "Edit";
+    string formattedDataCheckIn = Model.DataCheckIn.ToString("yyyy-MM-dd");
+    string formattedDataCheckOut = Model.DataCheckOut.ToString("yyyy-MM-dd");
+    string formattedDropDown = Model.TipoSoggiorno.ToString();
 }
 
-<h2>Edit</h2>
+<div class="p-5 m-5 shadow-lg">
+    <div class="row justify-content-center p-5 shadow-lg">
+        <div class="col-md-6 bg-dark text-light p-5 shadow-lg d-flex justify-content-center">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
 
+                <h4 class="fw-light text-center">MODIFICA PRENOTAZIONE</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.IdPrenotazione)
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Prenotazione</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdPrenotazione)
+                <div class="form-group m-1">
+                    @Html.LabelFor(model => model.NumeroCliente, htmlAttributes: new { @class = "control-label text-white-50" })
+                    @Html.DropDownListFor(model => model.NumeroCliente, new SelectList(ViewBag.listaClienti, "Value", "Text"), "  Seleziona un cliente  ", new { @class = "form-control bg-dark text-white-50" })
+                    @Html.ValidationMessageFor(model => model.NumeroCliente, "", new { @class = "text-danger" })
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.NumeroCliente, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NumeroCliente, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NumeroCliente, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group m-1">
+                    @Html.LabelFor(model => model.NumeroCamera, htmlAttributes: new { @class = "control-label text-white-50" })
+                    @Html.EditorFor(model => model.NumeroCamera, new { htmlAttributes = new { @class = "form-control bg-dark text-white-50" } })
+                    @Html.ValidationMessageFor(model => model.NumeroCamera, "", new { @class = "text-danger" })
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.NumeroCamera, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NumeroCamera, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NumeroCamera, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                @Html.HiddenFor(model => model.DataPrenotazione)
+                @Html.HiddenFor(model => model.Anno)
+                @Html.HiddenFor(model => model.NumeroProgressivo)
 
-        @Html.HiddenFor(model => model.DataPrenotazione)
+                <div class="form-group m-1">
+                    @Html.LabelFor(model => model.DataCheckIn, htmlAttributes: new { @class = "control-label text-white-50" })
+                    @Html.TextBoxFor(model => formattedDataCheckIn, new { type = "date", @class = "form-control bg-dark text-white-50" })
+                    @Html.ValidationMessageFor(model => model.DataCheckIn, "", new { @class = "text-danger" })
+                </div>
 
-        @Html.HiddenFor(model => model.Anno)
+                <div class="form-group m-1">
+                    @Html.LabelFor(model => model.DataCheckOut, htmlAttributes: new { @class = "control-label text-white-50" })
 
-        @Html.HiddenFor(model=> model.NumeroProgressivo)
+                    @Html.TextBoxFor(model => formattedDataCheckOut, new { type = "date", @class = "form-control bg-dark text-white-50" })
+                    @Html.ValidationMessageFor(model => model.DataCheckOut, "", new { @class = "text-danger" })
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataCheckIn, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.DataCheckIn, new {type="date", @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DataCheckIn, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group m-1">
+                    @Html.LabelFor(model => model.Caparra, htmlAttributes: new { @class = "control-label text-white-50" })
+                    @Html.EditorFor(model => model.Caparra, new { htmlAttributes = new { @class = "form-control bg-dark text-white-50" } })
+                    @Html.ValidationMessageFor(model => model.Caparra, "", new { @class = "text-danger" })
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataCheckOut, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.DataCheckOut, new  { type = "date", @class = "form-control" } )
-                @Html.ValidationMessageFor(model => model.DataCheckOut, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group m-1">
+                    @Html.LabelFor(model => model.TipoSoggiorno, htmlAttributes: new { @class = "control-label text-white-50" })
+                    @Html.DropDownListFor(model => formattedDropDown, new SelectList(AlbergoEPICODE_MVC.Models.Prenotazione.ListaTipoSoggiorno), "Seleziona tipo soggiorno", new { @class = "form-control bg-dark text-white-50" })
+                    @Html.ValidationMessageFor(model => model.TipoSoggiorno, "", new { @class = "text-danger" })
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Caparra, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Caparra, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Caparra, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group m-1">
+                    @Html.LabelFor(model => model.Tariffa, htmlAttributes: new { @class = "control-label text-white-50" })
+                    @Html.EditorFor(model => model.Tariffa, new { htmlAttributes = new { @class = "form-control bg-dark text-white-50" } })
+                    @Html.ValidationMessageFor(model => model.Tariffa, "", new { @class = "text-danger" })
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TipoSoggiorno, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.SelTipoSoggiorno, new SelectList(AlbergoEPICODE_MVC.Models.Prenotazione.ListaTipoSoggiorno), "  Seleziona tipo soggiorno  ", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TipoSoggiorno, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                @Html.HiddenFor(model => model.TipoCamera)
+                @Html.HiddenFor(model => model.IsSingola)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Tariffa, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Tariffa, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Tariffa, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @Html.HiddenFor(model => model.TipoCamera)
-
-        @Html.HiddenFor(model => model.IsSingola)
-
-        @*@Html.HiddenFor(model => model.SelTipoSoggiorno)*@
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+                <div class="form-group my-3 text-center">
+                    <input type="submit" value="Salva" class="w-100 btn btn-outline-light rounded-0" />
+                </div>
+            }
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
