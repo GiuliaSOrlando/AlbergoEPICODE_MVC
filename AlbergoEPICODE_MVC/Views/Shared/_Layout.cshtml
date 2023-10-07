@@ -12,8 +12,9 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark p-4">
         <div class="container">
             <div class="d-flex align-items-center">
-                @Html.ActionLink(" ", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                <img src="~/Content/img/epiclogohotel.png" alt="Immagine logo" style="width: 110px" />
+                <a class="navbar-brand" href="~/Home/Index">
+                    <img src="~/Content/img/epiclogohotel.png" alt="Immagine logo" style="width: 110px" />
+                    </a>
             </div>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +29,9 @@
                         <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="prenotazioneDropdown">
                             <a class="dropdown-item" href="@Url.Action("Create", "Booking")">Aggiungi prenotazione</a>
                             <a class="dropdown-item" href="@Url.Action("List", "Booking")">Lista prenotazioni</a>
+                            <a class="dropdown-item" href="@Url.Action("listaCheckout", "Booking")">Lista prenotazioni disattive</a>
+                            <a class="dropdown-item" href="@Url.Action("ViewBookingByCF", "Booking")">Filtra prenotazioni</a>
+
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -35,7 +39,7 @@
                             GESTIONE CLIENTI
                         </a>
                         <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="clientiDropdown">
-                            <a class="dropdown-item" href="@Url.Action("Edit", "Customer")">Aggiungi cliente</a>
+                            <a class="dropdown-item" href="@Url.Action("Create", "Customer")">Aggiungi cliente</a>
                             <a class="dropdown-item" href="@Url.Action("List", "Customer")">Lista clienti</a>
                         </div>
                     </li>
@@ -44,7 +48,7 @@
                             GESTIONE CAMERE
                         </a>
                         <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="cameraDropdown">
-                            <a class="dropdown-item" href="@Url.Action("Edit", "Room")">Aggiungi camera</a>
+                            <a class="dropdown-item" href="@Url.Action("Create", "Room")">Aggiungi camera</a>
                             <a class="dropdown-item" href="@Url.Action("List", "Room")">Lista camere</a>
                         </div>
                     </li>
@@ -53,10 +57,30 @@
                             GESTIONE SERVIZI EXTRA
                         </a>
                         <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="extraDropdown">
-                            <a class="dropdown-item" href="@Url.Action("Edit", "Extra")">Aggiungi extra</a>
+                            <a class="dropdown-item" href="@Url.Action("Create", "Extra")">Aggiungi extra</a>
                             <a class="dropdown-item" href="@Url.Action("List", "Extra")">Lista extra</a>
                         </div>
                     </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Signup", "Signup", "Auth", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Logout", "Logout", "Auth", null, new { @class = "nav-link" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Signup", "Signup", "Auth", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Login", "Login", "Auth", null, new { @class = "nav-link" })
+                        </li>
+                    }
                 </ul>
             </div>
         </div>

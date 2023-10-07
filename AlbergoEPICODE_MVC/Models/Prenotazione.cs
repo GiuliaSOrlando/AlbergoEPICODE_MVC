@@ -50,11 +50,13 @@ namespace AlbergoEPICODE_MVC.Models
 
         public static List<Prenotazione> listaPrenotazioniDisattive = new List<Prenotazione>();
 
+        public static List<Prenotazione> listaPrenotazioniPerCF = new List<Prenotazione>();
+
         public static List<string> ListaTipoSoggiorno = new List<string>
         {"Mezza pensione","Pensione completa","Pernottamento con prima colazione"};
 
         public string SelTipoSoggiorno { get; set; }
-
+        public bool IsCheckedOut { get; set; }
 
         // Metodi
 
@@ -198,7 +200,7 @@ namespace AlbergoEPICODE_MVC.Models
             try
             {
                 conn.Open();
-                SqlCommand visualizzaListaPrenotazioni = new SqlCommand("SELECT * FROM Prenotazioni", conn);
+                SqlCommand visualizzaListaPrenotazioni = new SqlCommand("SELECT * FROM Prenotazioni WHERE IsCheckedOut = 0", conn);
                 SqlDataReader readerLista = visualizzaListaPrenotazioni.ExecuteReader();
 
                 while (readerLista.Read())
@@ -379,7 +381,6 @@ namespace AlbergoEPICODE_MVC.Models
         }
 
 
-
         public bool EliminaPrenotazione(int id)
         {
             try
@@ -453,47 +454,202 @@ namespace AlbergoEPICODE_MVC.Models
             return 0;
         }
 
-        //public string DettaglioCompleto(int id)
-        //{
-        //    Prenotazione prenotazione = listaPrenotazioni.FirstOrDefault(p => p.IdPrenotazione == id);
-
-        //    if (prenotazione != null)
-        //    {
-        //        string dettaglio = $"Numero di stanza: {prenotazione.NumeroCamera}\n";
-        //        dettaglio += $"Periodo: dal {prenotazione.DataCheckIn.ToShortDateString()} al {prenotazione.DataCheckOut.ToShortDateString()}\n";
-        //        dettaglio += $"Tariffa applicata: {prenotazione.Tariffa:C}\n";
-        //        dettaglio += "Servizi aggiuntivi:\n";
-
-        //        foreach (var servizio in prenotazione.ListaExtraPrenotazione(id))
-        //        {
-        //            dettaglio += $"{servizio.Descrizione}: {servizio.Prezzo:C}\n";
-        //        }
-
-        //        dettaglio += $"Importo da saldare: {CalcolaImportoDaSaldare(id):C}\n";
-
-        //        return dettaglio;
-        //    }
-        //    else
-        //    {
-        //        return "Prenotazione non trovata";
-        //    }
-        //}
-
-
         public bool EffettuaCheckout(int idPrenotazione)
-        { 
-            Prenotazione prenotazione = listaPrenotazioni.FirstOrDefault(p => p.IdPrenotazione == idPrenotazione);
-
-            if (prenotazione != null)
+        {
+            try
             {
-                listaPrenotazioni.Remove(prenotazione);
+                conn.Open();
 
-                listaPrenotazioniDisattive.Add(prenotazione);
+                SqlCommand effettuaCheckout = new SqlCommand(
+                    "UPDATE Prenotazioni " +
+                    "SET IsCheckedOut = 1 " +
+                    "WHERE IdPrenotazione = @Id", conn);
 
-                return true; 
+                effettuaCheckout.Parameters.AddWithValue("@Id", idPrenotazione);
+
+                int prenotazioniChiuse = effettuaCheckout.ExecuteNonQuery();
+
+                if (prenotazioniChiuse > 0)
+                {
+                    Prenotazione prenotazione = listaPrenotazioni.FirstOrDefault(p => p.IdPrenotazione == idPrenotazione);
+
+                    if (prenotazione != null)
+                    {
+                        prenotazione.IsCheckedOut = true;
+                        listaPrenotazioni.Remove(prenotazione);
+                        listaPrenotazioniDisattive.Add(prenotazione);
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+
+        public List<Prenotazione> VisualizzaPrenotazioniDisattive()
+        {
+            listaPrenotazioniDisattive.Clear();
+                try
+                {
+                    conn.Open();
+                    SqlCommand recuperaCheckedOutPrenotazioni = new SqlCommand("SELECT * FROM Prenotazioni WHERE IsCheckedOut = 1", conn);
+                    SqlDataReader readerLista = recuperaCheckedOutPrenotazioni.ExecuteReader();
+
+                    while (readerLista.Read())
+                    {
+                        Prenotazione prenotazione = new Prenotazione
+                        {
+                            IdPrenotazione = (int)readerLista["IdPrenotazione"],
+                            NumeroCliente = (int)readerLista["NumeroCliente"],
+                            NumeroCamera = (int)readerLista["NumeroCamera"],
+                            DataPrenotazione = (DateTime)readerLista["DataPrenotazione"],
+                            Anno = (int)readerLista["Anno"],
+                            NumeroProgressivo = readerLista["NumeroProgressivo"].ToString(),
+                            DataCheckIn = (DateTime)readerLista["DataCheckIn"],
+                            DataCheckOut = (DateTime)readerLista["DataCheckOut"],
+                            Caparra = (decimal)readerLista["Caparra"],
+                            TipoSoggiorno = readerLista["TipoSoggiorno"].ToString(),
+                            Tariffa = (decimal)readerLista["Tariffa"]
+                        };
+   
+                        listaPrenotazioniDisattive.Add(prenotazione);
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                conn.Close();
             }
 
-            return false; 
+            return listaPrenotazioniDisattive;
+        }
+
+        public bool AnnullaCheckout(int idPrenotazione)
+        {
+            try
+            {
+                conn.Open();
+
+                SqlCommand annullaCheckout = new SqlCommand(
+                    "UPDATE Prenotazioni " +
+                    "SET IsCheckedOut = 0 " +
+                    "WHERE IdPrenotazione = @Id", conn);
+
+                annullaCheckout.Parameters.AddWithValue("@Id", idPrenotazione);
+
+                int prenotazioniRiattivate = annullaCheckout.ExecuteNonQuery();
+
+                if (prenotazioniRiattivate > 0)
+                {
+                    Prenotazione prenotazione = listaPrenotazioniDisattive.FirstOrDefault(p => p.IdPrenotazione == idPrenotazione);
+
+                    if (prenotazione != null)
+                    {
+                        prenotazione.IsCheckedOut = false; 
+                        listaPrenotazioniDisattive.Remove(prenotazione);
+                        listaPrenotazioni.Add(prenotazione);
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public List<Prenotazione> CercaPrenotazioniPerCodiceFiscale(string codiceFiscale)
+        {
+            listaPrenotazioniPerCF.Clear();
+
+            try
+            {
+                conn.Open();
+
+                SqlCommand cercaPrenotazioni = new SqlCommand(
+                    "SELECT * FROM Prenotazioni WHERE NumeroCliente = " +
+                    "(SELECT IdCliente FROM Clienti WHERE CF = @CF)", conn);
+                cercaPrenotazioni.Parameters.AddWithValue("@CF", codiceFiscale);
+
+                SqlDataReader reader = cercaPrenotazioni.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Prenotazione prenotazione = new Prenotazione
+                    {
+                        IdPrenotazione = (int)reader["IdPrenotazione"],
+                        NumeroCliente = (int)reader["NumeroCliente"],
+                        NumeroCamera = (int)reader["NumeroCamera"],
+                        DataPrenotazione = (DateTime)reader["DataPrenotazione"],
+                        Anno = (int)reader["Anno"],
+                        NumeroProgressivo = reader["NumeroProgressivo"].ToString(),
+                        DataCheckIn = (DateTime)reader["DataCheckIn"],
+                        DataCheckOut = (DateTime)reader["DataCheckOut"],
+                        Caparra = (decimal)reader["Caparra"],
+                        TipoSoggiorno = reader["TipoSoggiorno"].ToString(),
+                        Tariffa = (decimal)reader["Tariffa"],
+                    };
+
+                    listaPrenotazioniPerCF.Add(prenotazione);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return listaPrenotazioniPerCF;
+        }
+
+        public int TotalePrenotazioniPC()
+        {
+            int totalePPC = 0;
+
+            try
+            {
+                conn.Open();
+
+                SqlCommand PrenotazioniPensioneCompleta = new SqlCommand(
+                    "SELECT COUNT(*) FROM Prenotazioni WHERE TipoSoggiorno = 'Pensione completa'", conn);
+
+                totalePPC = (int)PrenotazioniPensioneCompleta.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return totalePPC;
         }
 
     }

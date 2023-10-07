@@ -11,13 +11,16 @@ namespace AlbergoEPICODE_MVC.Models
     public class Cliente
     {
         // Proprietà
+        [Display(Name = "Id cliente")]
         public int IdCliente { get; set; }
         [Required]
+        [Display(Name = "Codice fiscale")]
         public string CF { get; set; }
         [Required]
         public string Cognome { get; set; }
         [Required]
         public string Nome { get; set; }
+        [Display(Name = "Città")]
         public string Citta { get; set; }
         public string Provincia { get; set; }
         public string Email { get; set; }

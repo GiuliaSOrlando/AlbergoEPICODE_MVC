@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<AlbergoEPICODE_MVC.Models.Prenotazione>
 
 @{
-    ViewBag.Title = "List";
+    ViewBag.Title = "listaCheckout";
 }
 
 <div class="p-5 m-5 shadow-lg">
-    <h2 class="fw-light text-center text-white-50 bg-dark mb-0 pt-2">LISTA PRENOTAZIONI ATTIVE</h2>
+    <h2 class="fw-light text-center text-white-50 bg-dark mb-0 pt-2">LISTA PRENOTAZIONI DISATTIVE</h2>
     <div class="bg-dark table-responsive-xl p-5 d-flex justify-content-center">
         <table class="table-responsive-xl bg-dark text-white-50">
             <tr>
@@ -18,10 +18,10 @@
                 <th>
                     @Html.DisplayNameFor(model => model.NumeroCamera)
                 </th>
-                <th class="d-none d-xxl-table-cell">
+                <th>
                     @Html.DisplayNameFor(model => model.DataPrenotazione)
                 </th>
-                <th class="d-none d-xxl-table-cell">
+                <th>
                     @Html.DisplayNameFor(model => model.NumeroProgressivo)
                 </th>
                 <th>
@@ -33,12 +33,13 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Caparra)
                 </th>
-                <th class="d-none d-xxl-table-cell">
-                    @Html.DisplayNameFor(model => model.TipoSoggiorno)
-                </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Tariffa)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TipoCamera)
+                </th>
+
                 <th></th>
             </tr>
 
@@ -54,11 +55,10 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.NumeroCamera)
                     </td>
-                    <td class="d-none d-xxl-table-cell">
+                    <td>
                         @Html.DisplayFor(modelItem => item.DataPrenotazione)
                     </td>
-                    @Html.HiddenFor(modelItem => item.Anno)
-                    <td class="d-none d-xxl-table-cell">
+                    <td>
                         @Html.DisplayFor(modelItem => item.NumeroProgressivo)
                     </td>
                     <td>
@@ -68,24 +68,25 @@
                         @Html.DisplayFor(modelItem => item.DataCheckOut)
                     </td>
                     <td>
-                        @string.Format("{0:C}", item.Caparra)
+                        @Html.DisplayFor(modelItem => item.Caparra)
                     </td>
-                    <td class="d-none d-xxl-table-cell">
+                    <td>
                         @Html.DisplayFor(modelItem => item.TipoSoggiorno)
                     </td>
                     <td>
-                        @string.Format("{0:C}", item.Tariffa)
+                        @Html.DisplayFor(modelItem => item.Tariffa)
                     </td>
                     <td>
-                        <div class="btn-group p-2" role="group">
-                            @Html.ActionLink("Edit", "Edit", new { id = item.IdPrenotazione }, new { @class = "ms-1 btn btn-outline-light rounded-0" })
-                            @Html.ActionLink("Checkout", "Checkout", new { id = item.IdPrenotazione }, new { @class = "btn btn-outline-light rounded-0" })
-                            @Html.ActionLink("Delete", "Delete", new { id = item.IdPrenotazione }, new { @class = "me-1 btn btn-outline-light rounded-0" })
-                        </div>
+                        @Html.DisplayFor(modelItem => item.TipoCamera)
                     </td>
+                    <td>
+                        @Html.ActionLink("Ripristina", "UndoCheckout", new { id = item.IdPrenotazione }, new { @class = "btn btn-outline-light rounded-0" })
 
+                    </td>
                 </tr>
             }
+
         </table>
+        </div>
     </div>
 </div>

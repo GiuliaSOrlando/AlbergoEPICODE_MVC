@@ -4,65 +4,61 @@
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
+<div class="p-5 m-5 shadow-lg">
+    <div class="row justify-content-center p-5 shadow-lg">
+        <div class="col-md-6 bg-dark text-light p-5 shadow-lg d-flex justify-content-center">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
 
+                <div class="form-horizontal">
+                    <h4 class="fw-light text-center">AGGIUNGI SERVIZIO EXTRA</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.IdServizio)
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Servizio</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdServizio)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NumeroPrenotazione, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.NumeroPrenotazione, new { htmlAttributes = new { @class = "form-control bg-dark text-white-50" } })
+                            @Html.ValidationMessageFor(model => model.NumeroPrenotazione, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.NumeroPrenotazione, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NumeroPrenotazione, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NumeroPrenotazione, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    @Html.HiddenFor(model => model.DataServizio)
 
-        @Html.HiddenFor(model => model.DataServizio)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Descrizione, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.Descrizione, new SelectList(AlbergoEPICODE_MVC.Models.Servizio.ListaServizi), "  Seleziona tipo servizio  ", new { @class = "form-control bg-dark text-white-50" })
+                            @Html.ValidationMessageFor(model => model.Descrizione, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Descrizione, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Descrizione, new SelectList(AlbergoEPICODE_MVC.Models.Servizio.ListaServizi), "  Seleziona tipo servizio  ", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Descrizione, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Quantita, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Quantita, new { htmlAttributes = new { @class = "form-control bg-dark text-white-50" } })
+                            @Html.ValidationMessageFor(model => model.Quantita, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Quantita, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantita, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Quantita, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Prezzo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Prezzo, new { htmlAttributes = new { @class = "form-control bg-dark text-white-50" } })
+                            @Html.ValidationMessageFor(model => model.Prezzo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Prezzo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Prezzo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Prezzo, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-group my-3">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Aggiungi servizio" class="w-100 btn btn-outline-light rounded-0" />
+                        </div>
+                    </div>
+                </div>
+            }
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

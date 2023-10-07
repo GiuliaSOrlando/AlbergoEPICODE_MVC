@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace AlbergoEPICODE_MVC.Controllers
 {
+    [Authorize]
     public class BookingController : Controller
     {
         private void PopolaDropdownClienti()
@@ -15,6 +16,7 @@ namespace AlbergoEPICODE_MVC.Controllers
             List<SelectListItem> listaClienti = prenotazione.VisualizzaListaClienti();
             ViewBag.listaClienti = listaClienti;
         }
+
         public ActionResult List()
         {
             List<Prenotazione> listaPrenotazioni = Session["ListaPrenotazioni"] as List<Prenotazione>;
@@ -88,8 +90,6 @@ namespace AlbergoEPICODE_MVC.Controllers
         public ActionResult Edit(Prenotazione prenotazione)
         {
             PopolaDropdownClienti();
-            if (ModelState.IsValid)
-            {
                 if (prenotazione.VerificaDisponibilitaCamera(prenotazione.NumeroCamera, prenotazione.DataCheckIn, prenotazione.DataCheckOut))
                 {
                     if (prenotazione.ModificaPrenotazione(prenotazione.IdPrenotazione, prenotazione.NumeroCliente, prenotazione.NumeroCamera, prenotazione.DataCheckIn, prenotazione.DataCheckOut, prenotazione.TipoSoggiorno))
@@ -105,7 +105,6 @@ namespace AlbergoEPICODE_MVC.Controllers
                 {
                     ModelState.AddModelError("", "La camera non è disponibile per le date specificate.");
                 }
-            }
 
             return View(prenotazione);
         }
@@ -146,5 +145,53 @@ namespace AlbergoEPICODE_MVC.Controllers
             }
         }
 
+        public ActionResult listaCheckout()
+        {
+            Prenotazione prenotazione = new Prenotazione();
+            List<Prenotazione> checkedOutPrenotazioni = prenotazione.VisualizzaPrenotazioniDisattive();
+
+            return View(checkedOutPrenotazioni);
+        }
+
+        public ActionResult UndoCheckout(int id)
+        {
+            Prenotazione prenotazione = new Prenotazione();
+
+            if (prenotazione.AnnullaCheckout(id))
+            {
+                return RedirectToAction("listaCheckout");
+            }
+            else
+            {
+                return RedirectToAction("List");
+            }
+        }
+
+        public ActionResult ViewBookingByCF() {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult CercaPrenotazioniPerCF(string codiceFiscale)
+        {
+            Prenotazione prenotazione = new Prenotazione();
+            List<Prenotazione> listaPrenotazioniPerCF = prenotazione.CercaPrenotazioniPerCodiceFiscale(codiceFiscale);
+
+            return Json(listaPrenotazioniPerCF);
+        }
+
+        public ActionResult CountPensioneCompleta()
+        {
+            return View("_PensioneCompletaCountPartial");
+        }
+
+        [HttpPost]
+        public JsonResult TotalePrenotazioniPC()
+        {
+            Prenotazione prenotazione = new Prenotazione();
+            int totalePPC = prenotazione.TotalePrenotazioniPC();
+
+            return Json(totalePPC);
+        }
     }
 }

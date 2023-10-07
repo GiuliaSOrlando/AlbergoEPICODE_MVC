@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -10,8 +11,10 @@ namespace AlbergoEPICODE_MVC.Models
     public class Camera
     {
         // Proprietà
+        [Display(Name = "Id camera")]
         public int IdCamera { get; set; }
         public string Descrizione { get; set; }
+        [Display(Name = "Camera doppia")]
         public bool IsDoppia { get; set; }
 
         List<Camera> listaCamere = new List<Camera>();

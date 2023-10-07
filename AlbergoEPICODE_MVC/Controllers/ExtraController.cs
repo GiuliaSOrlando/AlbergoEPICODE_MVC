@@ -1,12 +1,14 @@
 ﻿using AlbergoEPICODE_MVC.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace AlbergoEPICODE_MVC.Controllers
 {
+    [Authorize]
     public class ExtraController : Controller
     {
         public ActionResult List()
@@ -54,18 +56,13 @@ namespace AlbergoEPICODE_MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Servizio servizio)
+        public ActionResult Edit(Servizio servizio, string formattedData)
         {
-                Servizio servizioDamodificare = new Servizio().RecuperaServizio(servizio.IdServizio);
-
-                if (servizioDamodificare != null)
+            if (ModelState.IsValid)
+            {
+                if (DateTime.TryParseExact(formattedData, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataServizio))
                 {
-                servizioDamodificare.DataServizio = servizio.DataServizio;
-                servizioDamodificare.Descrizione = servizio.Descrizione;
-                servizioDamodificare.Quantita = servizio.Quantita;
-                servizioDamodificare.Prezzo = servizio.Prezzo;
-
-                    if (servizioDamodificare.ModificaServizio(servizio.IdServizio, servizio.DataServizio, servizio.Descrizione, servizio.Quantita, servizio.Prezzo))
+                    if (servizio.ModificaServizio(servizio.IdServizio, dataServizio, servizio.Descrizione, servizio.Quantita, servizio.Prezzo))
                     {
                         return RedirectToAction("List");
                     }
@@ -76,8 +73,9 @@ namespace AlbergoEPICODE_MVC.Controllers
                 }
                 else
                 {
-                    return HttpNotFound();
+                    ModelState.AddModelError("", "DataServizio non è nel formato corretto.");
                 }
+            }
 
             return View(servizio);
         }

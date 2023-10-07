@@ -4,60 +4,62 @@
     ViewBag.Title = "List";
 }
 
-<h2>Lista extra</h2>
-
-    <p>
-        @Html.ActionLink("Aggiungi extra", "Create", null, new { @class = "text-decoration-none fs-4" })
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdServizio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumeroPrenotazione)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataServizio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descrizione)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantita)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prezzo)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
+<div class="p-5 m-5 shadow-lg">
+    <h2 class="fw-light text-center text-white-50 bg-dark mb-0 pt-2">LISTA SERVIZI EXTRA</h2>
+    <div class="bg-dark table-responsive-xl p-5 d-flex justify-content-center">
+        <table class="table-responsive-xl bg-dark text-white-50">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdServizio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumeroPrenotazione)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DataServizio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descrizione)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantita)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Prezzo)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.IdServizio }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdServizio })
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdServizio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumeroPrenotazione)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataServizio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descrizione)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantita)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Prezzo)
+                </th>
+                <th></th>
             </tr>
-        }
 
-    </table>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdServizio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroPrenotazione)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataServizio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descrizione)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantita)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Prezzo)
+                    </td>
+                    <td>
+                        <div class="btn-group p-2" role="group">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.IdServizio }, new { @class = "btn btn-outline-light rounded-0" })
+                     @Html.ActionLink("Delete", "Delete", new { id = item.IdServizio }, new { @class = "btn btn-outline-light rounded-0" })
+                        </div>
+</td>
+                </tr>
+            }
+
+        </table>
+        </div>
+</div>

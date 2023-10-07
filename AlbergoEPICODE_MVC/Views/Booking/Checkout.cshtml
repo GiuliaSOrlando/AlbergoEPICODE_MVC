@@ -1,38 +1,56 @@
-﻿@{
+﻿@using AlbergoEPICODE_MVC.Models
+
+@{
     ViewBag.Title = "Checkout";
 }
 
 <div class="p-5 m-5 shadow-lg">
     @if (ViewBag.checkoutEffettuato)
     {
-        <div class="bg-dark text-white-50 w-50 p-3 mx-auto text-center">Checkout effettuato con successo.</div>
+        <div class="bg-dark text-white-50 w-50 p-3 mb-3 mx-auto text-center">Checkout effettuato con successo.</div>
         <div class="row justify-content-center p-5 shadow-lg">
-            <div class="col-md-6 bg-dark text-light p-5 shadow-lg">
+            <div class="col-md-6 bg-dark text-white-50 p-5 shadow-lg">
+
                 <h2 class="fw-light">DETTAGLIO PRENOTAZIONE</h2>
 
-                <p>Numero di stanza: @ViewBag.Prenotazione.NumeroCamera @ViewBag.Prenotazione.TipoSoggiorno</p>
+                <p>Numero di stanza: @ViewBag.Prenotazione.NumeroCamera</p>
+                @if (!string.IsNullOrWhiteSpace(ViewBag.Prenotazione.TipoSoggiorno))
+                {
+                    <p>Tipo di soggiorno: @ViewBag.Prenotazione.TipoSoggiorno</p>
+                }
+                
+                else
+                {
+                <p>Tipo di soggiorno: Standard</p>
+                }
                 <p>Periodo: dal @ViewBag.Prenotazione.DataCheckIn.ToShortDateString() al @ViewBag.Prenotazione.DataCheckOut.ToShortDateString()</p>
-                <p>Tariffa applicata: @ViewBag.Prenotazione.Tariffa</p>
+                <p>Tariffa applicata: @string.Format("{0:C}", ViewBag.Prenotazione.Tariffa)</p>
 
-                <p>Servizi aggiuntivi</p>
-                <ul>
-                    @foreach (var servizio in ViewBag.ServiziAggiuntivi)
-                    {
-                        <li>@servizio.Descrizione: @servizio.Prezzo</li>
-                    }
-                </ul>
-
-                <p>Importo da saldare: @ViewBag.ImportoDaSaldare</p>
-
-                <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
+                @if (ViewBag.ServiziAggiuntivi.Count > 0)
+                {
+                    <p>Servizi aggiuntivi</p>
+                    <ul>
+                        @foreach (var servizio in ViewBag.ServiziAggiuntivi)
+                        {
+                            <li>@servizio.Descrizione: @servizio.Prezzo</li>
+                        }
+                    </ul>
                 }
                 else
                 {
-                <p>Errore nel checkout della prenotazione.</p>
-                <p><a href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
+                    <p>Nessun servizio aggiuntivo</p>
+                }
+
+
+                <p>Importo da saldare: @string.Format("{0:C}", ViewBag.ImportoDaSaldare)</p>
+
+                <p><a class="btn btn-outline-light btn-block rounded-0" href="@Url.Action("List")">Torna alla lista delle prenotazioni</a></p>
             </div>
         </div>
     }
-
-
+    else
+    {
+        <p>Errore nel checkout della prenotazione.</p>
+        <a class="btn btn-outline-light btn-block rounded-0" href="@Url.Action("List")">Torna alla lista delle prenotazioni</a>
+    }
 </div>

@@ -11,11 +11,16 @@ namespace AlbergoEPICODE_MVC.Models
     public class Servizio
     {
         // Proprietà
+        [Display(Name = "Id servizio")]
         public int IdServizio { get; set; }
         [Required]
+        [Display(Name = "Numero prenotazione")]
         public int NumeroPrenotazione { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Data servizio")]
         public DateTime DataServizio { get; set; }
         public string Descrizione { get; set; }
+        [Display(Name = "Quantità")]
         public int Quantita { get; set; }
         [Required]
         public decimal Prezzo { get; set; }

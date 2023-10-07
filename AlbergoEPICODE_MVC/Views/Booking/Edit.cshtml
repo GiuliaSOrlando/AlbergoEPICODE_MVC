@@ -4,7 +4,7 @@
     ViewBag.Title = "Edit";
     string formattedDataCheckIn = Model.DataCheckIn.ToString("yyyy-MM-dd");
     string formattedDataCheckOut = Model.DataCheckOut.ToString("yyyy-MM-dd");
-    string formattedDropDown = Model.TipoSoggiorno.ToString();
+    string formattedDropDown = Model.TipoSoggiorno;
 }
 
 <div class="p-5 m-5 shadow-lg">
@@ -56,7 +56,7 @@
 
                 <div class="form-group m-1">
                     @Html.LabelFor(model => model.TipoSoggiorno, htmlAttributes: new { @class = "control-label text-white-50" })
-                    @Html.DropDownListFor(model => formattedDropDown, new SelectList(AlbergoEPICODE_MVC.Models.Prenotazione.ListaTipoSoggiorno), "Seleziona tipo soggiorno", new { @class = "form-control bg-dark text-white-50" })
+                    @Html.DropDownListFor(model => model.TipoSoggiorno, new SelectList(AlbergoEPICODE_MVC.Models.Prenotazione.ListaTipoSoggiorno, Model.TipoSoggiorno), "Seleziona tipo soggiorno", new { @class = "form-control bg-dark text-white-50" })
                     @Html.ValidationMessageFor(model => model.TipoSoggiorno, "", new { @class = "text-danger" })
                 </div>
 

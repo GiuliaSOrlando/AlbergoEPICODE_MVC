@@ -120,6 +120,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\ExtraController.cs" />
@@ -204,6 +205,11 @@
     <Content Include="Views\Extra\List.cshtml" />
     <Content Include="Views\Extra\Edit.cshtml" />
     <Content Include="Views\Booking\Checkout.cshtml" />
+    <Content Include="Views\Booking\listaCheckout.cshtml" />
+    <Content Include="Views\Booking\ViewBookingByCF.cshtml" />
+    <Content Include="Views\Booking\_PensioneCompletaCountPartial.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Auth\Signup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

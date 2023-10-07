@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "ViewBookingByCF";
+}
+
+
+
+<div class="bg-dark p-3 w-75 m-3 d-flex justify-content-center mx-auto">
+    <h2 class="fw-lighter text-white-50">RICERCA PRENOTAZIONI PER CODICE FISCALE</h2>
+    <label for="codiceFiscale">Codice Fiscale:</label>
+    <input class="form-control bg-dark text-white-50" type="text" id="codiceFiscale" />
+    <button class="ms-2 btn btn-outline-light rounded-0" id="searchButton">Cerca</button>
+</div>
+
+<div class="p-5 m-5 shadow-lg">
+    <h2 class="fw-light text-center text-white-50 bg-dark mb-0 pt-2">LISTA PRENOTAZIONI PER CODICE FISCALE</h2>
+    <div id="results" class="bg-dark table-responsive-xl p-5 d-flex justify-content-center">
+        <table class="table-responsive-xl bg-dark text-white-50">
+            <thead>
+                <tr>
+                    <th class="mx-2">ID prenotazione</th>
+                    <th class="mx-2">Numero camera</th>
+                    <th class="mx-2">Numero progressivo</th>
+                    <th class="mx-2">Numero cliente</th>
+                    <th class="mx-2">Caparra</th>
+                    <th class="mx-2">Tariffa</th>
+                    <th class="mx-2">Data check-in</th>
+                    <th class="mx-2">Data check-out</th>
+                </tr>
+            </thead>
+            <tbody id="body-tabella">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="partialViewContainer">
+    @Html.Partial("_PensioneCompletaCountPartial")
+</div>
+
+
+@section scripts {
+    <script>
+        function parseJsonDate(jsonDate) {
+            let parsedDate = new Date(parseInt(jsonDate.substr(6)));
+            return parsedDate.toLocaleDateString();
+        }
+        function formattaValuta(amount) {
+            return new Intl.NumberFormat('it-IT', {
+                style: 'currency',
+                currency: 'EUR'
+            }).format(amount);
+        }
+        $(document).ready(function () {
+            $("#searchButton").click(function () {
+                var codiceFiscale = $("#codiceFiscale").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "CercaPrenotazioniPerCF",
+                    data: { codiceFiscale: codiceFiscale },
+                    success: function (data) {
+                        $("#body-tabella").empty();
+                        console.log("After empty:", $("#body-tabella").html());
+
+                        if (data.length > 0) {
+                            $("#body-tabella").empty();
+                            $.each(data, function (index, result) {
+                                var row = $("<tr>");
+                                row.append($("<td>").text(result.IdPrenotazione));
+                                row.append($("<td>").text(result.NumeroCamera));
+                                row.append($("<td>").text(result.NumeroProgressivo));
+                                row.append($("<td>").text(result.NumeroCliente));
+                                row.append($("<td>").text(formattaValuta(result.Caparra)));
+                                row.append($("<td>").text(formattaValuta(result.Tariffa)));
+                                row.append($("<td>").text(parseJsonDate(result.DataCheckIn)));
+                                row.append($("<td>").text(parseJsonDate(result.DataCheckOut)));
+                                $("#results tbody").append(row);
+                            });
+                        } else {
+                            $("#tabella-tbody").append($("<tr>").append($("<td>").attr("colspan", 8).text("Nessun risultato trovato.")));
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#countButton").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "TotalePrenotazioniPC",
+                    success: function (data) {
+                        console.log(data);
+                        $("#totalCount").text(data);
+                    }
+                });
+            });
+        });
+    </script>
+}
+

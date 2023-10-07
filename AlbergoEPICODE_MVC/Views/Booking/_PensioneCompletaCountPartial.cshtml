@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "CountPensioneCompleta";
+}
+
+<div class="bg-dark p-4 w-75 m-3 d-flex justify-content-center mx-auto">
+    <h2 class="fw-lighter text-white-50">PRENOTAZIONI CON PENSIONE COMPLETA</h2>
+    <p class="fs-5 text-white-50">Premere per calcolare il numero totale</p>
+    <button class="btn btn-outline-light mx-3 rounded-0" id="countButton">Calcola</button>
+
+    <div id="result">
+        <p class="fs-5 text-white-50">Numero totale di prenotazioni con pensione completa: <span class="text-white" id="totalCount"></span></p>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#countButton").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "TotalePrenotazioniPC",
+                    success: function (data) {
+                        console.log(data)
+                        $("#totalCount").text(data);
+                    }
+                });
+            });
+        });
+    </script>
+}

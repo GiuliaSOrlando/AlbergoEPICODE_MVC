@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace AlbergoEPICODE_MVC.Controllers
 {
+    [Authorize]
     public class RoomController : Controller
     {
         public ActionResult List()
